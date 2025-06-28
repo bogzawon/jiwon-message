@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지원이에게 보내는 말</title>
+  <style>
+    body {
+      background: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input, textarea {
+      width: 80%;
+      max-width: 400px;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #00c853;
+      color: white;
+      border: none;
+      padding: 10px 30px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #second {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="first">
+    <h2>이름을 적으시오</h2>
+    <input type="text" id="name" placeholder="이름 입력">
+    <br>
+    <button onclick="goNext()">다음</button>
+  </div>
+
+  <div id="second">
+    <h2>지원이에게 할 말❤️</h2>
+    <textarea id="message" rows="6" placeholder="하고 싶은 말을 써 주세요!"></textarea>
+    <br>
+    <button onclick="sendMessage()">보내기</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    let userName = "";
+
+    function goNext() {
+      userName = document.getElementById('name').value.trim();
+      if (userName === "") {
+        alert("이름을 입력해 주세요!");
+        return;
+      }
+      document.getElementById('first').style.display = 'none';
+      document.getElementById('second').style.display = 'block';
+    }
+
+    function sendMessage() {
+      const msg = document.getElementById('message').value.trim();
+      if (msg === "") {
+        alert("메시지를 입력해 주세요!");
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycby3Q6HSx6Y7YSmokHIt_J3CTmDwJy3olCikjXhxWMNPsrLSj6hnA4N9wm-EUklQQ5I_/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `name=${encodeURIComponent(userName)}&message=${encodeURIComponent(msg)}`
+      }).then(res => {
+        document.getElementById('status').innerText = "보내졌습니다! 💌";
+        document.getElementById('message').value = "";
+      }).catch(() => {
+        document.getElementById('status').innerText = "에러가 발생했어요 😢";
+      });
+    }
+  </script>
+
+</body>
+</html>
